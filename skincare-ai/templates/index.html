@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>AI Skincare</h1>
+
+    <video id="video" width="300" autoplay></video>
+    <br><br>
+    <button onclick="capture()">Analyze</button>
+
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <form id="form" method="POST" action="/analyze">
+        <input type="hidden" name="image" id="imageData">
+    </form>
+
+    <script>
+        const video = document.getElementById('video');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            alert("Camera access denied!");
+        });
+
+        function capture() {
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            context.drawImage(video, 0, 0);
+
+            const data = canvas.toDataURL('image/png');
+
+            document.getElementById('imageData').value = data;
+            document.getElementById('form').submit();
+        }
+    </script>
+</body>
+</html>
